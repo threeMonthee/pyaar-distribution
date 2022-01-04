@@ -1,30 +1,113 @@
 version: '3.9'
 services:
-  pyaar-service-console:
-    image: pyaar-repository-registry.ap-southeast-1.cr.aliyuncs.com/pyaar/pyaar-service-console:${PYAAR_IMAGE_TAG}
+  pyaar-service-user1:
+    image: ${PYAAR_IMAGE_PREFIX}pyaar-service-user:${PYAAR_IMAGE_TAG}
+    container_name: pyaar-service-user1
     environment:
       - JVM_OPTIONS=-Xmx1024m -Xms1024m -Xmn384m
-      - OPA_SERVICE_NAME=${SERVICE_CONSOLE_OPA_SERVICE_NAME}
-      - OPA_SERVICE_ADDR=${SERVICE_CONSOLE_OPA_SERVICE_ADDR}
-      - NACOS_CONFIG_ADDR=${SERVICE_CONSOLE_NACOS_CONFIG_ADDR}
-      - NACOS_CONFIG_NAMESPACE=${SERVICE_CONSOLE_NACOS_CONFIG_NAMESPACE}
-      - NACOS_CONFIG_GROUP=${SERVICE_CONSOLE_NACOS_CONFIG_GROUP}
+      #- OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-service-user
+      - SERVICE_OPTIONS=-Dnacos.config.addr=${NACOS_CONFIG_ADDR} -Dnacos.config.namespace=${NACOS_CONFIG_NAMESPACE} -Dnacos.config.group=${NACOS_CONFIG_GROUP}
+      - DUBBO_IP_TO_REGISTRY=${HOST_IP}
+      - DUBBO_PORT_TO_REGISTRY=20880
+    ports:
+      - "20880:20880"
     networks:
-      - pyaar-console
-  pyaar-console-server:
-    image: pyaar-repository-registry.ap-southeast-1.cr.aliyuncs.com/pyaar/pyaar-console-server:${PYAAR_IMAGE_TAG}
+      pyaar-net: { }
+  pyaar-service-user2:
+    image: ${PYAAR_IMAGE_PREFIX}pyaar-service-user:${PYAAR_IMAGE_TAG}
+    container_name: pyaar-service-user2
+    environment:
+      - JVM_OPTIONS=-Xmx1024m -Xms1024m -Xmn384m
+      #- OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-service-user
+      - SERVICE_OPTIONS=-Dnacos.config.addr=${NACOS_CONFIG_ADDR} -Dnacos.config.namespace=${NACOS_CONFIG_NAMESPACE} -Dnacos.config.group=${NACOS_CONFIG_GROUP}
+      - DUBBO_IP_TO_REGISTRY=${HOST_IP}
+      - DUBBO_PORT_TO_REGISTRY=20881
+    ports:
+      - "20881:20880"
+    networks:
+      pyaar-net: { }
+
+  pyaar-service-core1:
+    image: ${PYAAR_IMAGE_PREFIX}pyaar-service-core:${PYAAR_IMAGE_TAG}
+    container_name: pyaar-service-core1
+    environment:
+      - JVM_OPTIONS=-Xmx1024m -Xms1024m -Xmn384m
+      #- OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-service-core
+      - SERVICE_OPTIONS=-Dnacos.config.addr=${NACOS_CONFIG_ADDR} -Dnacos.config.namespace=${NACOS_CONFIG_NAMESPACE} -Dnacos.config.group=${NACOS_CONFIG_GROUP}
+      - DUBBO_IP_TO_REGISTRY=${HOST_IP}
+      - DUBBO_PORT_TO_REGISTRY=20882
+    ports:
+      - "20882:20880"
+    networks:
+      pyaar-net: { }
+
+  pyaar-service-core2:
+    image: ${PYAAR_IMAGE_PREFIX}pyaar-service-core:${PYAAR_IMAGE_TAG}
+    container_name: pyaar-service-core2
+    environment:
+      - JVM_OPTIONS=-Xmx1024m -Xms1024m -Xmn384m
+      #- OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-service-core
+      - SERVICE_OPTIONS=-Dnacos.config.addr=${NACOS_CONFIG_ADDR} -Dnacos.config.namespace=${NACOS_CONFIG_NAMESPACE} -Dnacos.config.group=${NACOS_CONFIG_GROUP}
+      - DUBBO_IP_TO_REGISTRY=${HOST_IP}
+      - DUBBO_PORT_TO_REGISTRY=20883
+    ports:
+      - "20883:20880"
+    networks:
+      pyaar-net: { }
+
+  pyaar-service-payment1:
+    image: ${PYAAR_IMAGE_PREFIX}pyaar-service-payment:${PYAAR_IMAGE_TAG}
+    container_name: pyaar-service-payment1
+    environment:
+      - JVM_OPTIONS=-Xmx1024m -Xms1024m -Xmn384m
+      #- OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-service-payment
+      - SERVICE_OPTIONS=-Dnacos.config.addr=${NACOS_CONFIG_ADDR} -Dnacos.config.namespace=${NACOS_CONFIG_NAMESPACE} -Dnacos.config.group=${NACOS_CONFIG_GROUP}
+      - DUBBO_IP_TO_REGISTRY=${HOST_IP}
+      - DUBBO_PORT_TO_REGISTRY=20884
+    ports:
+      - "20884:20880"
+    networks:
+      pyaar-net: { }
+
+  pyaar-service-payment2:
+    image: ${PYAAR_IMAGE_PREFIX}pyaar-service-payment:${PYAAR_IMAGE_TAG}
+    container_name: pyaar-service-payment2
+    environment:
+      - JVM_OPTIONS=-Xmx1024m -Xms1024m -Xmn384m
+      #- OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-service-payment
+      - SERVICE_OPTIONS=-Dnacos.config.addr=${NACOS_CONFIG_ADDR} -Dnacos.config.namespace=${NACOS_CONFIG_NAMESPACE} -Dnacos.config.group=${NACOS_CONFIG_GROUP}
+      - DUBBO_IP_TO_REGISTRY=${HOST_IP}
+      - DUBBO_PORT_TO_REGISTRY=20885
+    ports:
+      - "20885:20880"
+    networks:
+      pyaar-net: { }
+
+  pyaar-frontend-server1:
+    image: ${PYAAR_IMAGE_PREFIX}pyaar-frontend-server:${PYAAR_IMAGE_TAG}
+    container_name: pyaar-frontend-server1
     environment:
       - JVM_OPTIONS=-Xmx512m -Xms512m -Xmn192m
-      - OPA_SERVICE_NAME=${CONSOLE_SERVER_OPA_SERVICE_NAME}
-      - OPA_SERVICE_ADDR=${CONSOLE_SERVER_OPA_SERVICE_ADDR}
-      - NACOS_CONFIG_ADDR=${CONSOLE_SERVER_NACOS_CONFIG_ADDR}
-      - NACOS_CONFIG_NAMESPACE=${SERVER_CONSOLE_NACOS_CONFIG_NAMESPACE}
-      - NACOS_CONFIG_GROUP=${CONSOLE_SERVER_NACOS_CONFIG_GROUP}
+      #- OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-frontend-server
+      - SERVICE_OPTIONS=-Dnacos.config.addr=${NACOS_CONFIG_ADDR} -Dnacos.config.namespace=${NACOS_CONFIG_NAMESPACE} -Dnacos.config.group=${NACOS_CONFIG_GROUP} -Dserver.port=8080 -Dspring.cloud.nacos.discovery.ip=${HOST_IP} -Dspring.cloud.nacos.discovery.port=28080
+    ports:
+      - "28080:8080"
     networks:
-      - pyaar-console
-    depends_on:
-      - pyaar-service-console
+      pyaar-net: { }
+
+  pyaar-frontend-server2:
+    image: ${PYAAR_IMAGE_PREFIX}pyaar-frontend-server:${PYAAR_IMAGE_TAG}
+    container_name: pyaar-frontend-server2
+    environment:
+      - JVM_OPTIONS=-Xmx512m -Xms512m -Xmn192m
+      #- OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-frontend-server
+      - SERVICE_OPTIONS=-Dnacos.config.addr=${NACOS_CONFIG_ADDR} -Dnacos.config.namespace=${NACOS_CONFIG_NAMESPACE} -Dnacos.config.group=${NACOS_CONFIG_GROUP} -Dserver.port=8080 -Dspring.cloud.nacos.discovery.ip=${HOST_IP} -Dspring.cloud.nacos.discovery.port=28081
+    ports:
+      - "28081:8080"
+    networks:
+      pyaar-net: { }
 
 networks:
-  pyaar-console:
+  pyaar-net:
     driver: bridge
+
