@@ -94,6 +94,13 @@ services:
       - "28080:8080"
     networks:
       pyaar-net: { }
+    depends_on:
+      - pyaar-service-user1
+      - pyaar-service-user2
+      - pyaar-service-payment1
+      - pyaar-service-payment2
+      - pyaar-service-core1
+      - pyaar-service-core2
 
   pyaar-frontend-server2:
     image: ${PYAAR_IMAGE_PREFIX}pyaar-frontend-server:${PYAAR_IMAGE_TAG}
@@ -106,8 +113,31 @@ services:
       - "28081:8080"
     networks:
       pyaar-net: { }
+    depends_on:
+      - pyaar-service-user1
+      - pyaar-service-user2
+      - pyaar-service-payment1
+      - pyaar-service-payment2
+      - pyaar-service-core1
+      - pyaar-service-core2
+
+  pyaar-gateway:
+    image: ${PYAAR_IMAGE_PREFIX}pyaar-gateway:1.2.0.6
+    container_name: pyaar-gateway
+    environment:
+      - JVM_OPTIONS=-Xmx512m -Xms512m -Xmn192m
+      #- OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-gateway
+      - SERVICE_OPTIONS=-Dnacos.config.addr=${NACOS_CONFIG_ADDR} -Dnacos.config.namespace=${NACOS_CONFIG_NAMESPACE} -Dnacos.config.group=${NACOS_CONFIG_GROUP} -Dserver.port=8080 -Dspring.cloud.nacos.discovery.ip=${HOST_IP} -Dspring.cloud.nacos.discovery.port=8080
+    ports:
+      - "8080:8080"
+    networks:
+      pyaar-net: { }
+    depends_on:
+      - pyaar-frontend-server1
+      - pyaar-frontend-server2
 
 networks:
   pyaar-net:
+    name: pyaar-net
     driver: bridge
 
