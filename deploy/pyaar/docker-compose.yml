@@ -5,7 +5,7 @@ services:
     container_name: pyaar-service-user1
     environment:
       - JVM_OPTIONS=-Xmx1024m -Xms1024m -Xmn384m
-      #- OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-service-user
+      - OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-service-user -Dskywalking.collector.backend_service=${OAP_SERVICE_ADDR}
       - SERVICE_OPTIONS=-Dnacos.config.addr=${NACOS_CONFIG_ADDR} -Dnacos.config.namespace=${NACOS_CONFIG_NAMESPACE} -Dnacos.config.group=${NACOS_CONFIG_GROUP}
       - DUBBO_IP_TO_REGISTRY=${HOST_IP}
       - DUBBO_PORT_TO_REGISTRY=20880
@@ -18,7 +18,7 @@ services:
     container_name: pyaar-service-user2
     environment:
       - JVM_OPTIONS=-Xmx1024m -Xms1024m -Xmn384m
-      #- OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-service-user
+      - OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-service-user  -Dskywalking.collector.backend_service=${OAP_SERVICE_ADDR}
       - SERVICE_OPTIONS=-Dnacos.config.addr=${NACOS_CONFIG_ADDR} -Dnacos.config.namespace=${NACOS_CONFIG_NAMESPACE} -Dnacos.config.group=${NACOS_CONFIG_GROUP}
       - DUBBO_IP_TO_REGISTRY=${HOST_IP}
       - DUBBO_PORT_TO_REGISTRY=20881
@@ -32,7 +32,7 @@ services:
     container_name: pyaar-service-core1
     environment:
       - JVM_OPTIONS=-Xmx1024m -Xms1024m -Xmn384m
-      #- OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-service-core
+      - OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-service-core  -Dskywalking.collector.backend_service=${OAP_SERVICE_ADDR}
       - SERVICE_OPTIONS=-Dnacos.config.addr=${NACOS_CONFIG_ADDR} -Dnacos.config.namespace=${NACOS_CONFIG_NAMESPACE} -Dnacos.config.group=${NACOS_CONFIG_GROUP}
       - DUBBO_IP_TO_REGISTRY=${HOST_IP}
       - DUBBO_PORT_TO_REGISTRY=20882
@@ -46,7 +46,7 @@ services:
     container_name: pyaar-service-core2
     environment:
       - JVM_OPTIONS=-Xmx1024m -Xms1024m -Xmn384m
-      #- OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-service-core
+      - OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-service-core  -Dskywalking.collector.backend_service=${OAP_SERVICE_ADDR}
       - SERVICE_OPTIONS=-Dnacos.config.addr=${NACOS_CONFIG_ADDR} -Dnacos.config.namespace=${NACOS_CONFIG_NAMESPACE} -Dnacos.config.group=${NACOS_CONFIG_GROUP}
       - DUBBO_IP_TO_REGISTRY=${HOST_IP}
       - DUBBO_PORT_TO_REGISTRY=20883
@@ -60,7 +60,7 @@ services:
     container_name: pyaar-service-payment1
     environment:
       - JVM_OPTIONS=-Xmx1024m -Xms1024m -Xmn384m
-      #- OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-service-payment
+      - OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-service-payment  -Dskywalking.collector.backend_service=${OAP_SERVICE_ADDR}
       - SERVICE_OPTIONS=-Dnacos.config.addr=${NACOS_CONFIG_ADDR} -Dnacos.config.namespace=${NACOS_CONFIG_NAMESPACE} -Dnacos.config.group=${NACOS_CONFIG_GROUP}
       - DUBBO_IP_TO_REGISTRY=${HOST_IP}
       - DUBBO_PORT_TO_REGISTRY=20884
@@ -74,7 +74,7 @@ services:
     container_name: pyaar-service-payment2
     environment:
       - JVM_OPTIONS=-Xmx1024m -Xms1024m -Xmn384m
-      #- OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-service-payment
+      - OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-service-payment  -Dskywalking.collector.backend_service=${OAP_SERVICE_ADDR}
       - SERVICE_OPTIONS=-Dnacos.config.addr=${NACOS_CONFIG_ADDR} -Dnacos.config.namespace=${NACOS_CONFIG_NAMESPACE} -Dnacos.config.group=${NACOS_CONFIG_GROUP}
       - DUBBO_IP_TO_REGISTRY=${HOST_IP}
       - DUBBO_PORT_TO_REGISTRY=20885
@@ -88,7 +88,7 @@ services:
     container_name: pyaar-frontend-server1
     environment:
       - JVM_OPTIONS=-Xmx512m -Xms512m -Xmn192m
-      #- OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-frontend-server
+      - OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-frontend-server  -Dskywalking.collector.backend_service=${OAP_SERVICE_ADDR}
       - SERVICE_OPTIONS=-Dnacos.config.addr=${NACOS_CONFIG_ADDR} -Dnacos.config.namespace=${NACOS_CONFIG_NAMESPACE} -Dnacos.config.group=${NACOS_CONFIG_GROUP} -Dserver.port=8080 -Dspring.cloud.nacos.discovery.ip=${HOST_IP} -Dspring.cloud.nacos.discovery.port=28080
     ports:
       - "28080:8080"
@@ -96,18 +96,18 @@ services:
       pyaar-net: { }
     depends_on:
       - pyaar-service-user1
-      - pyaar-service-user2
+      #- pyaar-service-user2
       - pyaar-service-payment1
-      - pyaar-service-payment2
+      #- pyaar-service-payment2
       - pyaar-service-core1
-      - pyaar-service-core2
+      #- pyaar-service-core2
 
   pyaar-frontend-server2:
     image: ${PYAAR_IMAGE_PREFIX}pyaar-frontend-server:${PYAAR_IMAGE_TAG}
     container_name: pyaar-frontend-server2
     environment:
       - JVM_OPTIONS=-Xmx512m -Xms512m -Xmn192m
-      #- OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-frontend-server
+      - OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-frontend-server  -Dskywalking.collector.backend_service=${OAP_SERVICE_ADDR}
       - SERVICE_OPTIONS=-Dnacos.config.addr=${NACOS_CONFIG_ADDR} -Dnacos.config.namespace=${NACOS_CONFIG_NAMESPACE} -Dnacos.config.group=${NACOS_CONFIG_GROUP} -Dserver.port=8080 -Dspring.cloud.nacos.discovery.ip=${HOST_IP} -Dspring.cloud.nacos.discovery.port=28081
     ports:
       - "28081:8080"
@@ -115,18 +115,18 @@ services:
       pyaar-net: { }
     depends_on:
       - pyaar-service-user1
-      - pyaar-service-user2
+      #- pyaar-service-user2
       - pyaar-service-payment1
-      - pyaar-service-payment2
+      #- pyaar-service-payment2
       - pyaar-service-core1
-      - pyaar-service-core2
+      #- pyaar-service-core2
 
   pyaar-gateway:
     image: ${PYAAR_IMAGE_PREFIX}pyaar-gateway:1.2.0.6
     container_name: pyaar-gateway
     environment:
       - JVM_OPTIONS=-Xmx512m -Xms512m -Xmn192m
-      #- OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-gateway
+      - OAP_OPTIONS=-javaagent:/skywalking-agent/skywalking-agent.jar -Dskywalking.agent.service_name=pyaar-gateway  -Dskywalking.collector.backend_service=${OAP_SERVICE_ADDR}
       - SERVICE_OPTIONS=-Dnacos.config.addr=${NACOS_CONFIG_ADDR} -Dnacos.config.namespace=${NACOS_CONFIG_NAMESPACE} -Dnacos.config.group=${NACOS_CONFIG_GROUP} -Dserver.port=8080 -Dspring.cloud.nacos.discovery.ip=${HOST_IP} -Dspring.cloud.nacos.discovery.port=8080
     ports:
       - "8080:8080"
@@ -134,7 +134,7 @@ services:
       pyaar-net: { }
     depends_on:
       - pyaar-frontend-server1
-      - pyaar-frontend-server2
+      #- pyaar-frontend-server2
 
 networks:
   pyaar-net:

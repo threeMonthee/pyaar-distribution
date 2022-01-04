@@ -1,111 +1,48 @@
 version: '3.9'
 services:
-  #es
   es:
     image: elasticsearch:7.16.2
-    container_name: skywalking-es
+    container_name: es
     environment:
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    #volumes:
-     # - ./es:/usr/share/elasticsearch/data
     ports:
-      - "9200:9200"
-    networks:
-      skywalking-net:
-        ipv4_address: 172.20.10.10
+      - 9200:9200
     healthcheck:
       test: [ "CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1" ]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 10s
-  #oap
-  oap1:
+  skywalking-oap:
     image: apache/skywalking-oap-server:8.9.1
-    container_name: skywalking-oap1
-    environment:
-      - SW_CORE_GRPC_HOST=172.20.10.11
-      - SW_CORE_GRPC_PORT=11800
-      - SW_CORE_REST_HOST=172.20.10.11
-      - SW_CORE_REST_PORT=12800
-    env_file:
-      - ./oap.env
-    healthcheck:
-      test: [ "CMD-SHELL", "/skywalking/bin/swctl ch" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-    networks:
-      skywalking-net:
-        ipv4_address: 172.20.10.11
+    container_name: skywalking-oap
     depends_on:
       es:
         condition: service_healthy
-  oap2:
-    image: apache/skywalking-oap-server:8.9.1
-    container_name: skywalking-oap2
     environment:
-      - SW_CORE_GRPC_HOST=172.20.10.12
-      - SW_CORE_GRPC_PORT=11800
-      - SW_CORE_REST_HOST=172.20.10.12
-      - SW_CORE_REST_PORT=12800
-    env_file:
-      - ./oap.env
-    healthcheck:
-      test: [ "CMD-SHELL", "/skywalking/bin/swctl ch" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-    networks:
-      skywalking-net:
-        ipv4_address: 172.20.10.12
-    depends_on:
-      es:
-        condition: service_healthy
-  #satellite
-  satellite:
-    image: apache/skywalking-satellite:v0.5.0
-    container_name: skywalking-satellite
-    environment:
-      - SATELLITE_GRPC_CLIENT_FINDER=static
-      - SATELLITE_GRPC_CLIENT=oap1:11800,oap2:11800
+      - SW_STORAGE=elasticsearch
+      - SW_STORAGE_ES_CLUSTER_NODES=es:9200
     ports:
-      - "11800:11800"
-    networks:
-      skywalking-net:
-        ipv4_address: 172.20.10.13
-    depends_on:
-      oap1:
-        condition: service_healthy
-      oap2:
-        condition: service_healthy
-  #ui
-  ui:
+      - 11800:11800
+      - 12800:12800
+    healthcheck:
+      test: [ "CMD-SHELL", "/skywalking/bin/swctl ch" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+  skywalking-ui:
     image: apache/skywalking-ui:8.9.1
     container_name: skywalking-ui
-    environment:
-      SW_OAP_ADDRESS: http://skywalking-oap1:12800,http://skywalking-oap2:12800
-    ports:
-      - "8085:8080"
-    networks:
-      skywalking-net:
-        ipv4_address: 172.20.10.14
     depends_on:
-      oap1:
+      skywalking-oap:
         condition: service_healthy
-      oap2:
-        condition: service_healthy
+    environment:
+      SW_OAP_ADDRESS: http://skywalking-oap:12800
+    ports:
+      - 8085:8080
+
 networks:
-  skywalking-net:
-    name: skywalking-net
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.20.10.0/16
+  skywalking:
+    driver: bridge
