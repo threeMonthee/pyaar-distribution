@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  pyaar-service-console:
+    image: pyaar-repository-registry.ap-southeast-1.cr.aliyuncs.com/pyaar/pyaar-service-console:${PYAAR_IMAGE_TAG}
+    environment:
+      - JVM_OPTIONS=-Xmx1024m -Xms1024m -Xmn384m
+      - OPA_SERVICE_NAME=pyaar-service-console
+      - OPA_SERVICE_ADDR=${OPA_SERVICE_ADDR}
+      - NACOS_CONFIG_ADDR=${NACOS_CONFIG_ADDR}
+      - NACOS_CONFIG_NAMESPACE=${NACOS_CONFIG_NAMESPACE}
+      - NACOS_CONFIG_GROUP=${NACOS_CONFIG_GROUP}
+    networks:
+      - pyaar-console
+  pyaar-console-server:
+    image: pyaar-repository-registry.ap-southeast-1.cr.aliyuncs.com/pyaar/pyaar-console-server:${PYAAR_IMAGE_TAG}
+    environment:
+      - JVM_OPTIONS=-Xmx512m -Xms512m -Xmn192m
+      - OPA_SERVICE_NAME=pyaar-console-server
+      - OPA_SERVICE_ADDR=${OPA_SERVICE_ADDR}
+      - NACOS_CONFIG_ADDR=${NACOS_CONFIG_ADDR}
+      - NACOS_CONFIG_NAMESPACE=${NACOS_CONFIG_NAMESPACE}
+      - NACOS_CONFIG_GROUP=${NACOS_CONFIG_GROUP}
+    networks:
+      - pyaar-console
+    depends_on:
+      - pyaar-service-console
+
+networks:
+  pyaar-console:
+    external: true
+    driver: host

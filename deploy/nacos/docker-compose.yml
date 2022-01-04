@@ -1,0 +1,76 @@
+version: '3.9'
+services:
+  #mysql
+  mysql:
+    image: mysql:8.0.27
+    container_name: nacos-mysql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: s8XHz3xf2hJQGWWjIpOFATxr7JVXt69C
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql/conf:/etc/mysql
+      - ./mysql/data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
+    networks:
+      nacos-net: {}
+    profiles:
+      - debug
+  #nacos
+  nacos1:
+    hostname: nacos1
+    image: nacos/nacos-server:2.0.2
+    container_name: nacos1
+    env_file:
+      - ./nacos.env
+    networks:
+      nacos-net: {}
+    depends_on:
+      mysql:
+        condition: service_healthy
+  nacos2:
+    hostname: nacos2
+    image: nacos/nacos-server:2.0.2
+    container_name: nacos2
+    env_file:
+      - ./nacos.env
+    networks:
+      nacos-net: {}
+    depends_on:
+      mysql:
+        condition: service_healthy
+  nacos3:
+    hostname: nacos3
+    image: nacos/nacos-server:2.0.2
+    container_name: nacos3
+    env_file:
+      - ./nacos.env
+    networks:
+      nacos-net: {}
+    depends_on:
+      mysql:
+        condition: service_healthy
+  #nginx
+  nginx:
+    image: nginx:1.20.2
+    container_name: nacos-nginx
+    volumes:
+      - ./nginx:/etc/nginx
+    ports:
+      - 8848:8848
+      - 9848:9848
+    networks:
+      nacos-net: {}
+    depends_on:
+      - nacos1
+      - nacos2
+      - nacos3
+
+networks:
+  nacos-net:
+    name: nacosnet
+    driver: bridge
