@@ -1,0 +1,14 @@
+version: '3.9'
+services:
+  #mysql, debug mode
+  mysql:
+    image: mysql:8.0.27
+    container_name: nacos-mysql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: s8XHz3xf2hJQGWWjIpOFATxr7JVXt69C
+    ports:
+      - 3306:3306
+    volumes:
+      - ./conf:/etc/mysql
+      - ./data:/var/lib/mysql
