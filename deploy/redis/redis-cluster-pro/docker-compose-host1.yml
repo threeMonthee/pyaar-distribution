@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+  redis-cluster-m1:
+    container_name: redis-cluster-m1
+    image: redis:${REDIS_VERSION}
+    command:
+      - /etc/redis.conf
+    network_mode: host
+    volumes:
+      - ./conf/redis-m1.conf:/etc/redis.conf
+      - ./data/m1:/data
+
+  redis-cluster-s3:
+    container_name: redis-cluster-s3
+    image: redis:${REDIS_VERSION}
+    command:
+      - /etc/redis.conf
+    network_mode: host
+    volumes:
+      - ./conf/redis-s3.conf:/etc/redis.conf
+      - ./data/s3:/data

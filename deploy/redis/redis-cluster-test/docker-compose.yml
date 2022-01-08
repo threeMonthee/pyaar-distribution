@@ -1,0 +1,77 @@
+version: '3.9'
+services:
+  redis1:
+    container_name: redis-m1
+    image: redis:6.2.6
+    command:
+      - /etc/redis.conf
+    volumes:
+      - ./conf/redis.conf:/etc/redis.conf
+    networks:
+      redis-cluster-net:
+        ipv4_address: 172.10.1.1
+
+  redis2:
+    container_name: redis-m2
+    image: redis:6.2.6
+    command:
+      - /etc/redis.conf
+    volumes:
+      - ./conf/redis.conf:/etc/redis.conf
+    networks:
+      redis-cluster-net:
+        ipv4_address: 172.10.1.2
+
+  redis3:
+    container_name: redis-m3
+    image: redis:6.2.6
+    command:
+      - /etc/redis.conf
+    volumes:
+      - ./conf/redis.conf:/etc/redis.conf
+    networks:
+      redis-cluster-net:
+        ipv4_address: 172.10.1.3
+
+  redis4:
+    container_name: redis-s1
+    image: redis:6.2.6
+    command:
+      - /etc/redis.conf
+    volumes:
+      - ./conf/redis.conf:/etc/redis.conf
+    networks:
+      redis-cluster-net:
+        ipv4_address: 172.10.2.1
+
+  redis5:
+    container_name: redis-s2
+    image: redis:6.2.6
+    command:
+      - /etc/redis.conf
+    volumes:
+      - ./conf/redis.conf:/etc/redis.conf
+    networks:
+      redis-cluster-net:
+        ipv4_address: 172.10.2.2
+
+  redis6:
+    container_name: redis-s3
+    image: redis:6.2.6
+    command:
+      - /etc/redis.conf
+    volumes:
+      - ./conf/redis.conf:/etc/redis.conf
+    networks:
+      redis-cluster-net:
+        ipv4_address: 172.10.2.3
+
+networks:
+  redis-cluster-net:
+    name: redis-cluster-net
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.10.0.0/16
+
+
