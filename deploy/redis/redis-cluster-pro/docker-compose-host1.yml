@@ -1,21 +1,34 @@
 version: '3.9'
 services:
-  redis-cluster-m1:
-    container_name: redis-cluster-m1
+  redis-group1-m0:
+    container_name: redis-group1-m0
     image: redis:${REDIS_VERSION}
+    restart: always
     command:
       - /etc/redis.conf
     network_mode: host
     volumes:
-      - ./conf/redis-m1.conf:/etc/redis.conf
-      - ./data/m1:/data
+      - ./conf/group1/redis-m0.conf:/etc/redis.conf
+      - ./data/group1/m0:/data
 
-  redis-cluster-s3:
-    container_name: redis-cluster-s3
+  redis-group2-s1:
+    container_name: redis-group2-s1
     image: redis:${REDIS_VERSION}
+    restart: always
     command:
       - /etc/redis.conf
     network_mode: host
     volumes:
-      - ./conf/redis-s3.conf:/etc/redis.conf
-      - ./data/s3:/data
+      - ./conf/group2/redis-s1.conf:/etc/redis.conf
+      - ./data/group2/s1:/data
+
+  redis-group3-s2:
+    container_name: redis-group3-s2
+    image: redis:${REDIS_VERSION}
+    restart: always
+    command:
+      - /etc/redis.conf
+    network_mode: host
+    volumes:
+      - ./conf/group3/redis-s2.conf:/etc/redis.conf
+      - ./data/group3/s2:/data
