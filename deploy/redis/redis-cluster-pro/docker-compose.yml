@@ -1,0 +1,34 @@
+version: '3.9'
+services:
+  redis1:
+    container_name: redis1
+    image: redis:${REDIS_VERSION}
+    restart: always
+    command:
+      - /etc/redis.conf
+    network_mode: host
+    volumes:
+      - ./conf/redis1.conf:/etc/redis.conf
+      - ./data/redis1:/data
+
+  redis2:
+    container_name: redis2
+    image: redis:${REDIS_VERSION}
+    restart: always
+    command:
+      - /etc/redis.conf
+    network_mode: host
+    volumes:
+      - ./conf/redis2.conf:/etc/redis.conf
+      - ./data/redis2:/data
+
+  redis3:
+    container_name: redis3
+    image: redis:${REDIS_VERSION}
+    restart: always
+    command:
+      - /etc/redis.conf
+    network_mode: host
+    volumes:
+      - ./conf/redis3.conf:/etc/redis.conf
+      - ./data/redis3:/data
