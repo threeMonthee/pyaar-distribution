@@ -1,0 +1,35 @@
+version: '3.9'
+services:
+  namesrv:
+    image: pyaar/rocketmq:${ROCKETMQ_VERSION}
+    container_name: rmq-namesrv
+    command: sh bin/mqnamesrv
+    environment:
+      - NAMESRV_JVM_XMS=256m
+      - NAMESRV_JVM_XMX=512m
+      - NAMESRV_JVM_XMN=256m
+    ports:
+      - "9876:9876"
+
+  broker:
+    image: pyaar/rocketmq:${ROCKETMQ_VERSION}
+    container_name: rmq-broker
+    command: sh bin/mqbroker -c /home/rocketmq/rocketmq-${ROCKETMQ_VERSION}/conf/broker.conf
+    environment:
+      - NAMESRV_ADDR=namesrv:9876
+      - BROKER_JVM_XMS=512m
+      - BROKER_JVM_XMX=1024m
+    volumes:
+      - ./broker.conf:/home/rocketmq/rocketmq-${ROCKETMQ_VERSION}/conf/broker.conf
+    ports:
+      - "10909:10909"
+      - "10911:10911"
+      - "10912:10912"
+
+  dashboard:
+    image: apacherocketmq/rocketmq-dashboard
+    container_name: rmq-dashboard
+    environment:
+      - JAVA_OPTS=-Drocketmq.namesrv.addr=namesrv:9876 -Dserver.port=8080
+    ports:
+      - "8085:8080"

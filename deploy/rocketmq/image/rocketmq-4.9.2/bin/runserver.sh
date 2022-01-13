@@ -62,13 +62,29 @@ choose_gc_log_directory()
     esac
 }
 
+JVM_XMS=$NAMESRV_JVM_XMS
+JVM_XMX=$NAMESRV_JVM_XMX
+JVM_XMN=$NAMESRV_JVM_XMN
+
+if [ -z $JVM_XMS ]; then
+  JVM_XMS="4g"
+fi
+
+if [ -z $JVM_XMX ]; then
+  JVM_XMX="4g"
+fi
+
+if [ -z $JVM_XMN ]; then
+  JVM_XMN="2g"
+fi
+
 choose_gc_options()
 {
     # Example of JAVA_MAJOR_VERSION value : '1', '9', '10', '11', ...
     # '1' means releases befor Java 9
     JAVA_MAJOR_VERSION=$("$JAVA" -version 2>&1 | sed -r -n 's/.* version "([0-9]*).*$/\1/p')
     if [ -z "$JAVA_MAJOR_VERSION" ] || [ "$JAVA_MAJOR_VERSION" -lt "9" ] ; then
-      JAVA_OPT="${JAVA_OPT} -server -Xms4g -Xmx4g -Xmn2g -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=320m"
+      JAVA_OPT="${JAVA_OPT} -server -Xms${JVM_XMS} -Xmx${JVM_XMX} -Xmn${JVM_XMN} -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=320m"
       JAVA_OPT="${JAVA_OPT} -XX:+UseConcMarkSweepGC -XX:+UseCMSCompactAtFullCollection -XX:CMSInitiatingOccupancyFraction=70 -XX:+CMSParallelRemarkEnabled -XX:SoftRefLRUPolicyMSPerMB=0 -XX:+CMSClassUnloadingEnabled -XX:SurvivorRatio=8 -XX:-UseParNewGC"
       JAVA_OPT="${JAVA_OPT} -verbose:gc -Xloggc:${GC_LOG_DIR}/rmq_srv_gc_%p_%t.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps"
       JAVA_OPT="${JAVA_OPT} -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5 -XX:GCLogFileSize=30m"

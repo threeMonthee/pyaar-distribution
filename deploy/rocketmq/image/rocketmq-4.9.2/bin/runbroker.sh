@@ -64,7 +64,18 @@ choose_gc_log_directory()
 
 choose_gc_log_directory
 
-JAVA_OPT="${JAVA_OPT} -server -Xms512m -Xmx512m"
+JVM_XMS=$BROKER_JVM_XMS
+JVM_XMX=$BROKER_JVM_XMX
+
+if [ -z $JVM_XMS ]; then
+  JVM_XMS="8g"
+fi
+
+if [ -z $JVM_XMX ]; then
+  JVM_XMX="8g"
+fi
+
+JAVA_OPT="${JAVA_OPT} -server -Xms${JVM_XMS} -Xmx${JVM_XMX}"
 JAVA_OPT="${JAVA_OPT} -XX:+UseG1GC -XX:G1HeapRegionSize=16m -XX:G1ReservePercent=25 -XX:InitiatingHeapOccupancyPercent=30 -XX:SoftRefLRUPolicyMSPerMB=0"
 JAVA_OPT="${JAVA_OPT} -verbose:gc -Xloggc:${GC_LOG_DIR}/rmq_broker_gc_%p_%t.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCApplicationStoppedTime -XX:+PrintAdaptiveSizePolicy"
 JAVA_OPT="${JAVA_OPT} -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5 -XX:GCLogFileSize=30m"
