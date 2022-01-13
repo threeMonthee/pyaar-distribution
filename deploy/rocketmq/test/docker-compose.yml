@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   namesrv:
-    image: pyaar/rocketmq:${ROCKETMQ_VERSION}
+    image: pyaar-repository-registry.ap-southeast-1.cr.aliyuncs.com/pyaar/rocketmq:${ROCKETMQ_VERSION}
     container_name: rmq-namesrv
     command: sh bin/mqnamesrv
     environment:
@@ -12,7 +12,7 @@ services:
       - "9876:9876"
 
   broker:
-    image: pyaar/rocketmq:${ROCKETMQ_VERSION}
+    image: pyaar-repository-registry.ap-southeast-1.cr.aliyuncs.com/pyaar/rocketmq:${ROCKETMQ_VERSION}
     container_name: rmq-broker
     command: sh bin/mqbroker -c /home/rocketmq/rocketmq-${ROCKETMQ_VERSION}/conf/broker.conf
     environment:
