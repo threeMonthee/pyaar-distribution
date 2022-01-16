@@ -1,0 +1,23 @@
+version: '3.9'
+services:
+  mysql:
+    image: mysql:8.0.27
+    container_name: xxl-job-mysql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+    network_mode: host
+    volumes:
+      - ./mysql/conf:/etc/mysql
+      - ./mysql/data/data:/var/lib/mysql
+
+  job-admin:
+    image: xuxueli/xxl-job-admin:2.3.0
+    container_name: xxl-job-admin
+    environment:
+      - PARAMS=--spring.datasource.url=jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+        --spring.datasource.username=${MYSQL_USERNAME}
+        --spring.datasource.password=${MYSQL_PASSWORD}
+        --spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+        --server.port=8086
+    network_mode: host
