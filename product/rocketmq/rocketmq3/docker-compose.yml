@@ -1,0 +1,37 @@
+version: '3.9'
+services:
+  namesrv:
+    image: pyaar-repository-registry.ap-southeast-1.cr.aliyuncs.com/pyaar/rocketmq:${ROCKETMQ_VERSION}
+    container_name: rocketmq-namesrv
+    command: sh bin/mqnamesrv
+    environment:
+      - NAMESRV_JVM_XMS=2g
+      - NAMESRV_JVM_XMX=2g
+      - NAMESRV_JVM_XMN=1g
+    network_mode: host
+
+  broker-c0-n2:
+    image: pyaar-repository-registry.ap-southeast-1.cr.aliyuncs.com/pyaar/rocketmq:${ROCKETMQ_VERSION}
+    container_name: rocketmq-broker-c0-n2
+    command: sh bin/mqbroker -c /home/rocketmq/rocketmq-4.9.2/conf/broker.conf
+    environment:
+      - NAMESRV_ADDR=${NAMESRV_ADDR}
+      - BROKER_JVM_XMS=8g
+      - BROKER_JVM_XMX=8g
+    volumes:
+      - ./broker-c0-n2.conf:/home/rocketmq/rocketmq-4.9.2/conf/broker.conf
+      - ./store-c0-n2:/home/rocketmq/rocketmq-4.9.2/store
+    network_mode: host
+
+  broker-c1-n0:
+    image: pyaar-repository-registry.ap-southeast-1.cr.aliyuncs.com/pyaar/rocketmq:${ROCKETMQ_VERSION}
+    container_name: rocketmq-broker-c1-n2
+    command: sh bin/mqbroker -c /home/rocketmq/rocketmq-4.9.2/conf/broker.conf
+    environment:
+      - NAMESRV_ADDR=${NAMESRV_ADDR}
+      - BROKER_JVM_XMS=8g
+      - BROKER_JVM_XMX=8g
+    volumes:
+      - ./broker-c1-n0.conf:/home/rocketmq/rocketmq-4.9.2/conf/broker.conf
+      - ./store-c1-n0:/home/rocketmq/rocketmq-4.9.2/store
+    network_mode: host
