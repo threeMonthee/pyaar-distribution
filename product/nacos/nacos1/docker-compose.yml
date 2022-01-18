@@ -1,0 +1,26 @@
+version: '3.9'
+services:
+  nacos:
+    container_name: nacos
+    image: nacos/nacos-server:2.0.2
+    environment:
+      - JVM_XMS=1g
+      - JVM_XMX=1g
+      - JVM_XMN=512m
+      - MODE=cluster
+      - NACOS_APPLICATION_PORT=8849
+      - NACOS_SERVERS=192.168.0.1:8849 192.168.0.2:8848 192.168.0.3:8848 192.168.0.4:8848
+      - SPRING_DATASOURCE_PLATFORM=mysql
+      - MYSQL_SERVICE_HOST=pyaar-proxy.rwlb.singapore.rds.aliyuncs.com
+      - MYSQL_SERVICE_DB_NAME=nacos_config
+      - MYSQL_SERVICE_PORT=3306
+      - MYSQL_SERVICE_USER=nacos
+      - MYSQL_SERVICE_PASSWORD=IgX15HEBZWvdpIohGPzFTEiExONHJIdw
+    network_mode: host
+
+  nginx:
+    image: nginx:1.20.2
+    container_name: nacos-nginx
+    volumes:
+      - ./nginx:/etc/nginx
+    network_mode: host
