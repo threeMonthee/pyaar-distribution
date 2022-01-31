@@ -1,0 +1,9 @@
+version: '3.9'
+services:
+  ssr:
+    container_name: ssr
+    image: shadowsocks/shadowsocks-libev
+    environment:
+      - PASSWORD=QsCmasok6HMf8c5Rg3SqzDfXBPXYSJQl
+    ports:
+      - "10937:8388/udp"
