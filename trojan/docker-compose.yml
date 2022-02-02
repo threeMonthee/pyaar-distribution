@@ -1,0 +1,17 @@
+version: '3.9'
+services:
+
+  nginx:
+    image: nginx:1.20.2
+    container_name: trojan-nginx
+    restart: always
+    volumes:
+      - ./conf:/etc/nginx
+      - ./html:/usr/share/nginx/html
+    network_mode: host
+  trojan:
+    image: p4gefau1t/trojan-go
+    container_name: trojan-go
+    volumes:
+      - ./trojan-go:/etc/trojan-go
+    network_mode: host

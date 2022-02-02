@@ -3,7 +3,9 @@ services:
   ssr:
     container_name: ssr
     image: shadowsocks/shadowsocks-libev
+    command: ss-server -p 8388  -k 123456  -m rc4-md5
     environment:
-      - PASSWORD=QsCmasok6HMf8c5Rg3SqzDfXBPXYSJQl
+      - PASSWORD=123456
     ports:
       - "10937:8388/udp"
+      - "10937:8388"
