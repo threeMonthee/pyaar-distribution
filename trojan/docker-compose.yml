@@ -6,12 +6,11 @@ services:
     container_name: trojan-nginx
     restart: always
     volumes:
-      - ./conf:/etc/nginx
-      - ./html:/usr/share/nginx/html
+      - ./nginx:/etc/nginx
     network_mode: host
   trojan:
     image: p4gefau1t/trojan-go
     container_name: trojan-go
     volumes:
-      - ./trojan-go:/etc/trojan-go
+      - ./trojan:/etc/trojan-go
     network_mode: host
